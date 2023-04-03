@@ -29,9 +29,43 @@ $(document).ready(function() {
         $('[data-bs-toggle="popover"]').popover();
     }
 
+    function dodajPruge() {
+        $('table tr').removeClass('pruge');
+        $('table tr:even').addClass('pruge');
+    }
+
+    function dodajHeaderBoju() {
+        //$('table tr').removeClass('pruge');
+        $('table th').css('color', 'darkBlue');
+        $('table th').css('background-color', 'white');
+    }
+
+    function nakon2sekunde() {
+        setTimeout(function(){
+            console.log('nakon 2 sekunde');
+            let myPokemonP = $("table td a:contains('p')").filter(function(){
+                return this.innerHTML.indexOf('p') == 0;
+            });
+            myPokemonP.closest('tr').remove();
+            dodajPruge();
+
+            console.log("skrivenih:" + myPokemonP.length);
+            $('<div id="skriveni"></div>')
+            .insertAfter($('#div-pokemoni'))
+            .text("Skrivenih:" + myPokemonP.length);
+        }, 2000);
+    }
+
+    function odradiOstalo() {
+        dodajPruge();
+        dodajHeaderBoju();
+        nakon2sekunde();
+    }
+
     // funkcija koja ce se pozvati na loadanju stranice
     request.onload = function() {
         popuniPokemone();
+        odradiOstalo();
     }
     // posanji request na (pokemon) API
     request.send();
