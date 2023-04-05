@@ -29,37 +29,48 @@ $(document).ready(function() {
         $('[data-bs-toggle="popover"]').popover();
     }
 
-    function dodajPruge() {
+    
+    function dodajPruge(){
         $('table tr').removeClass('pruge');
         $('table tr:even').addClass('pruge');
     }
-
-    function dodajHeaderBoju() {
-        //$('table tr').removeClass('pruge');
+    function dodajHeaderBoju(){
         $('table th').css('color', 'darkBlue');
-        $('table th').css('background-color', 'white');
+        $('table th').css('background-color', 'green');
     }
-
-    function nakon2sekunde() {
+    function nakon2Sekunde(){
         setTimeout(function(){
             console.log('nakon 2 sekunde');
             let myPokemonP = $("table td a:contains('p')").filter(function(){
                 return this.innerHTML.indexOf('p') == 0;
             });
-            myPokemonP.closest('tr').remove();
+            //let myPokemonP = $("table td a.contains('^p.+$')");
+            myPokemonP.closest('tr').remove(); // todo: jquery syntax
             dodajPruge();
 
-            console.log("skrivenih:" + myPokemonP.length);
+            console.log("skrivenih: " + myPokemonP.length);
+            //<div id="skriveni"></div>
             $('<div id="skriveni"></div>')
-            .insertAfter($('#div-pokemoni'))
-            .text("Skrivenih:" + myPokemonP.length);
+                .insertAfter($('#div-pokemoni'))
+                .text("Skrivenih: " + myPokemonP.length);
         }, 2000);
     }
 
-    function odradiOstalo() {
+    function registrirajMouseEvent(){
+        $('table tr').on('mouseenter', event => {
+            $(event.currentTarget).css('background-color', 'magenta');
+        });
+
+        $('table tr').on('mouseleave', event => {
+            $(event.currentTarget).removeAttr('style');
+        });
+    }
+
+    function odradiOstalo(){
         dodajPruge();
         dodajHeaderBoju();
-        nakon2sekunde();
+        nakon2Sekunde();
+        registrirajMouseEvent();
     }
 
     // funkcija koja ce se pozvati na loadanju stranice
@@ -67,6 +78,11 @@ $(document).ready(function() {
         popuniPokemone();
         odradiOstalo();
     }
-    // posanji request na (pokemon) API
+    // posalji request na (pokemon) API
     request.send();
+
+    $(window).resize(() => {
+        console.log("Width: " + window.innerWidth);
+        console.log("Height: " + $(window).height());
+    });
 });
